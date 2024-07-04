@@ -14,7 +14,6 @@ export class ProductsService {
         const result = await this.productsRepository.find({
             skip: offset,
             take: limit,
-            select: ["id", "name", "description", "price", "quantity"],
         });
 
         return result.map((item) => ({
@@ -30,13 +29,7 @@ export class ProductsService {
         const item = await this.productsRepository.findOneBy({
             id,
         });
-        return {
-            id: item.id,
-            name: item.name,
-            description: item.description,
-            price: item.price,
-            quantity: item.quantity,
-        };
+        return item;
     }
 
     async save(data: Omit<Product, "createdAt" | "updatedAt" | "id">) {

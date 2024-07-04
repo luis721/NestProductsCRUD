@@ -4,4 +4,8 @@ export class ProductResponseDTO {
     description: string;
     price: number;
     quantity: number;
+    actions: {
+        update: string;
+        delete: string;
+    };
 }

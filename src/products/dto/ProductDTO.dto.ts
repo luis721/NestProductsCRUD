@@ -1,4 +1,5 @@
-import { IsPositive, IsString, Length } from "class-validator";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { IsOptional, IsPositive, IsString, Length } from "class-validator";
 
 export class ProductDTO {
     @IsString()
@@ -6,6 +7,8 @@ export class ProductDTO {
     name: string;
 
     @IsString()
+    @IsOptional()
+    @ApiPropertyOptional()
     description: string;
 
     @IsPositive()

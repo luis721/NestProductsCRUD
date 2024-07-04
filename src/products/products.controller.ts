@@ -52,7 +52,7 @@ export class ProductsController {
         const VALID_LIMITS = [5, 10, 15];
         if (!VALID_LIMITS.includes(limit)) throw new UnprocessableEntityException();
         const result = await this.productsService.getAll(page, limit);
-        return result;
+        return result.map(ProductsController.transformProduct);
     }
 
     @Post("")
@@ -74,7 +74,7 @@ export class ProductsController {
         // TODO: HATEOAS
         const result = await this.productsService.getById(id);
         if (!result) throw new NotFoundException();
-        return result;
+        return ProductsController.transformProduct(result);
     }
 
     @Put(":id")
