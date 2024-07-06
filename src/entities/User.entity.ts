@@ -7,24 +7,21 @@ import {
 } from "typeorm";
 
 @Entity()
-export class Product {
+export class User {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column({ unique: true })
+    username: string;
 
     @Column({ nullable: false })
     name: string;
 
-    @Column({ nullable: true })
-    description: string;
+    @Column({ type: "text" })
+    password: string;
 
-    @Column({ type: "decimal", nullable: false })
-    price: number;
-
-    @Column({ type: "int", nullable: false })
-    quantity: number;
-
-    @Column({ default: "N" })
-    location: string;
+    // @Column({ type: "text" })
+    // salt: string;
 
     @UpdateDateColumn()
     updatedAt: Date;

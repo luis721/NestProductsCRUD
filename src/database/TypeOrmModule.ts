@@ -13,7 +13,8 @@ export const typeOrmModule = TypeOrmModule.forRootAsync({
             password: configService.get<string>("DB_PASS"),
             database: configService.get<string>("DB_NAME"),
             autoLoadEntities: true,
-            synchronize: true,
+            // synchronize: true,
+            migrationsTableName: "migrations",
         };
     },
 });

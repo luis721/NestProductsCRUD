@@ -32,6 +32,7 @@ export class ProductsController {
             description: product.description,
             quantity: product.quantity,
             price: product.price,
+            location: product.location,
             actions: {
                 update: actionURL,
                 delete: actionURL,
@@ -55,6 +56,23 @@ export class ProductsController {
         return result.map(ProductsController.transformProduct);
     }
 
+    @Get("/search")
+    @ApiOperation({ description: "Lists products containing the given name" })
+    @ApiResponse({
+        type: ProductResponseDTO,
+    })
+    async getByName(
+        @Query("name") name: string,
+        @Query("page", new DefaultValuePipe(0), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    ) {
+        if (page < 0) throw new UnprocessableEntityException();
+        const VALID_LIMITS = [5, 10, 15];
+        if (!VALID_LIMITS.includes(limit)) throw new UnprocessableEntityException();
+        const result = await this.productsService.getByName(name, page, limit);
+        return result.map(ProductsController.transformProduct);
+    }
+
     @Post("")
     @ApiOperation({ description: "Create a new product" })
     @ApiResponse({
@@ -62,6 +80,11 @@ export class ProductsController {
         description: "The product has been successfully created.",
     })
     async create(@Body() dto: ProductDTO) {
+        const location = dto.location ?? "N";
+        if (location !== "N" && location !== "S")
+            throw new UnprocessableEntityException({
+                message: "Location must be N or S.",
+            });
         return await this.productsService.save(dto);
     }
 
@@ -71,7 +94,6 @@ export class ProductsController {
         type: ProductResponseDTO,
     })
     async getById(@Param("id", ParseIntPipe) id: number) {
-        // TODO: HATEOAS
         const result = await this.productsService.getById(id);
         if (!result) throw new NotFoundException();
         return ProductsController.transformProduct(result);
@@ -80,6 +102,11 @@ export class ProductsController {
     @Put(":id")
     @ApiOperation({ description: "Update a product by id" })
     async update(@Param("id", ParseIntPipe) id: number, @Body() dto: ProductDTO) {
+        const location = dto.location ?? "N";
+        if (location !== "N" && location !== "S")
+            throw new UnprocessableEntityException({
+                message: "Location must be N or S.",
+            });
         const result = await this.productsService.update(id, dto);
         if (!result) throw new NotFoundException();
         return { status: "Ok" };

@@ -16,4 +16,8 @@ export class ProductDTO {
 
     @IsPositive()
     quantity: number;
+
+    @IsString()
+    @IsOptional()
+    location: string;
 }

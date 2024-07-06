@@ -4,6 +4,7 @@ export class ProductResponseDTO {
     description: string;
     price: number;
     quantity: number;
+    location: string;
     actions: {
         update: string;
         delete: string;

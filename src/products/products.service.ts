@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Product } from "../entities/Product.entity";
+import { Like } from "typeorm";
 
 @Injectable()
 export class ProductsService {
@@ -22,6 +23,26 @@ export class ProductsService {
             description: item.description,
             price: item.price,
             quantity: item.quantity,
+            location: item.location,
+        }));
+    }
+
+    async getByName(name: string, page: number, limit: number) {
+        const offset = page * limit;
+        const result = await this.productsRepository.find({
+            where: {
+                name: Like(`%${name}%`),
+            },
+            skip: offset,
+            take: limit,
+        });
+        return result.map((item) => ({
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            quantity: item.quantity,
+            location: item.location,
         }));
     }
 
@@ -38,6 +59,7 @@ export class ProductsService {
             price: data.price,
             description: data.description,
             quantity: data.quantity,
+            location: data.location,
         });
 
         return result;
@@ -51,6 +73,7 @@ export class ProductsService {
                 price: data.price,
                 description: data.description,
                 quantity: data.quantity,
+                location: data.location,
             },
         );
         return result.affected === 1;
